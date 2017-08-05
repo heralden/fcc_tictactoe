@@ -1,24 +1,17 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  width: 75vh;
+  height: 75vh;
+  max-width: 75vw;
+  max-height: 75vw;
+  min-width: 45em;
+  min-height: 45em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: hsl(100, 30%, 45%);
+  background: radial-gradient(circle, hsl(100, 50%, 55%), hsl(100, 30%, 45%), hsl(100, 30%, 35%));
+  border: 2em hsl(40, 50%, 50%) solid;
+  border-image: radial-gradient(circle, hsl(40, 50%, 50%) 70%, hsl(40, 45%, 48%) 80%, hsl(40, 40%, 45%) 90%) 10;
 }

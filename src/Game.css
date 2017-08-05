@@ -1,0 +1,31 @@
+.Game-table {
+  table-layout: fixed;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 75%;
+  border-spacing: 0;
+}
+
+.Game-table tr :nth-child(2) {
+  border-left: 0.5em solid white;
+  border-right: 0.5em solid white;
+}
+
+.Game-table tbody :nth-child(2) td {
+  border-top: 0.5em solid white;
+  border-bottom: 0.5em solid white;
+}
+
+.Game-table tr :nth-child(2),
+.Game-table tbody :nth-child(2) td {
+  border-image: linear-gradient(to bottom right, hsl(0, 0%, 90%), hsl(0, 0%, 65%)) 10 10 stretch;
+  border-image: linear-gradient(to bottom right, hsl(0, 0%, 90%), hsl(0, 0%, 65%)) 10 10 stretch;
+}
+
+.Game-table td {
+  height: 33%;
+  width: 33%;
+}
