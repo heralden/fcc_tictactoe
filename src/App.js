@@ -3,7 +3,7 @@ import './App.css';
 import Menu from './Menu';
 import ScoreBoard from './ScoreBoard';
 import Game from './Game';
-
+import { placePiece, moveCpu, isGameOver } from './actions';
 
 class App extends Component {
   constructor(props) {
@@ -22,18 +22,22 @@ class App extends Component {
     };
   }
 
-  resetState = () => {
+  resetBoard = () => {
     this.setState({
       gameOver: false,
-      playerPiece: 'O', 
-      playerScore: 0,
-      otherScore: 0,
       board: [
         [ null, null, null ],
         [ null, null, null ],
         [ null, null, null ]
       ]
     });
+  }
+  resetState = () => {
+    this.setState({
+      playerPiece: 'O', 
+      playerScore: 0,
+      otherScore: 0
+    }, () => this.resetBoard());
   }
   handleOnePlayer = e => {
     this.resetState();
@@ -47,17 +51,55 @@ class App extends Component {
       cpu: false 
     });
   }
+
+  gameWon = winner => {
+    let targetScore;
+    if (winner === this.state.playerPiece) {
+      targetScore = "playerScore";
+    } else {
+      targetScore = "otherScore";
+    }
+
+    this.setState(prevState => ({ 
+      gameOver: winner,
+      [targetScore]: prevState[targetScore] + 1
+    }), () => {
+      setTimeout(
+        () => this.resetBoard(),
+        2000
+      )
+    });
+  }
+
+  cpuTurn = () => {
+    let cpuPiece = this.state.playerPiece === 'O' ? 'X' : 'O';
+    moveCpu(this.state.board, cpuPiece, (i, j) => this.setState(
+      prevState => ({
+        board: placePiece(i, j,
+          prevState.board,
+          cpuPiece
+        )
+      }),
+      () => {
+        let winner = isGameOver(this.state.board);
+        if (winner) {
+          this.gameWon(winner);
+        }
+      }
+    ));
+  }
+
   handleClickCell = (i, j) => () => {
     if (this.state.board[i][j] === null) {
       this.setState(prevState => ({
         board: placePiece(i, j, 
-          this.state.board, 
-          this.state.playerPiece
+          prevState.board, 
+          prevState.playerPiece
         )
       }), () => {
-        let winner = gameOver(this.state.board);
+        let winner = isGameOver(this.state.board);
         if (winner) {
-          this.setState({ gameOver: winner });
+          this.gameWon(winner);
         } else {
           if (this.state.cpu) {
             this.cpuTurn();
@@ -116,46 +158,4 @@ const Main = props => {
       />
     );
   }
-}
-
-const placePiece = (i, j, board, piece) => [
-  ...board.slice(0, i),
-  [
-    ...board[i].slice(0, j),
-    piece,
-    ...board[i].slice(j+1)
-  ],
-  ...board.slice(i+1)
-]
-
-const gameOver = board => {
-  if (winScenario(board, 'X'))
-    return 'X';
-  else if (winScenario(board, 'O'))
-    return 'O';
-  else
-    return false;
-}
-
-const winScenario = (b, e) => {
-  if ( isSeq(b[0][0], b[1][0], b[2][0], e)
-    || isSeq(b[0][1], b[1][1], b[2][1], e)
-    || isSeq(b[0][2], b[1][2], b[2][2], e)
-    || isSeq(b[0][0], b[0][1], b[0][2], e)
-    || isSeq(b[1][0], b[1][1], b[1][2], e)
-    || isSeq(b[2][0], b[2][1], b[2][2], e)
-    || isSeq(b[0][0], b[1][1], b[2][2], e)
-    || isSeq(b[2][0], b[1][1], b[0][2], e))
-    return true;
-  else
-    return false;
-}
-
-const isSeq = (a, b, c, e) => {
-  if (a === e &&
-      b === e &&
-      c === e)
-    return true
-  else 
-    return false
 }
