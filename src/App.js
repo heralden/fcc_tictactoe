@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.state = {
       cpu: null,
-      gameOver: false,
+      message: null,
       playerPiece: 'O', 
       playerScore: 0,
       otherScore: 0,
@@ -24,7 +24,6 @@ class App extends Component {
 
   resetBoard = () => {
     this.setState({
-      gameOver: false,
       board: [
         [ null, null, null ],
         [ null, null, null ],
@@ -33,7 +32,6 @@ class App extends Component {
     });
   }
   resetState = () => {
-    clearTimeout(this.resetTimer);
     this.setState({
       playerPiece: 'O', 
       playerScore: 0,
@@ -44,13 +42,23 @@ class App extends Component {
     this.resetState();
     this.setState({ 
       cpu: true
-    });
+    }, this.showMessage("Player vs CPU"));
   }
   handleTwoPlayer = e => {
     this.resetState();
     this.setState({ 
-      cpu: false 
-    });
+      cpu: false
+    }, this.showMessage("Two Player"));
+  }
+
+  showMessage = text => {
+    clearTimeout(this.msgTimer);
+    this.setState({ 
+      message: text
+    }, () => this.msgTimer = setTimeout(
+      () => this.setState({ message: null }),
+      2000
+    ));
   }
 
   gameWon = winner => {
@@ -62,13 +70,10 @@ class App extends Component {
     }
 
     this.setState(prevState => ({ 
-      gameOver: winner,
       [targetScore]: prevState[targetScore] + 1
     }), () => {
-      this.resetTimer = setTimeout(
-        () => this.resetBoard(),
-        2000
-      )
+      this.showMessage(winner.concat(" won!"));
+      this.resetBoard();
     });
   }
 
@@ -123,7 +128,7 @@ class App extends Component {
         />
         <Main 
           cpu={this.state.cpu}
-          gameOver={this.state.gameOver}
+          message={this.state.message}
           handleClickCell={this.handleClickCell}
           board={this.state.board}
         />
@@ -145,10 +150,10 @@ const Main = props => {
         Choose a game mode!
       </p>
     );
-  } else if (props.gameOver) {
+  } else if (props.message) {
     return (
       <p className="placeholder-text">
-        {props.gameOver} won!
+        {props.message}
       </p>
     );
   } else {
