@@ -9,6 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      pause: false,
       cpu: null,
       message: null,
       playerPiece: 'O', 
@@ -32,7 +33,9 @@ class App extends Component {
     });
   }
   resetState = () => {
+    clearTimeout(this.waitTimer);
     this.setState({
+      pause: false,
       playerPiece: 'O', 
       playerScore: 0,
       otherScore: 0
@@ -61,6 +64,14 @@ class App extends Component {
     ));
   }
 
+  gameComplete = winner => {
+    this.setState({
+      pause: true
+    }, () => {
+      this.waitTimer = setTimeout(() => this.gameWon(winner), 1000);
+    });
+  }
+
   gameWon = winner => {
     let targetScore;
     if (winner === this.state.playerPiece) {
@@ -70,6 +81,7 @@ class App extends Component {
     }
 
     this.setState(prevState => ({ 
+      pause: false,
       [targetScore]: prevState[targetScore] + 1
     }), () => {
       this.showMessage(winner.concat(" won!"));
@@ -89,14 +101,14 @@ class App extends Component {
       () => {
         let winner = isGameOver(this.state.board);
         if (winner) {
-          this.gameWon(winner);
+          this.gameComplete(winner);
         }
       }
     ));
   }
 
   handleClickCell = (i, j) => () => {
-    if (this.state.board[i][j] === null) {
+    if (this.state.board[i][j] === null && !this.state.pause) {
       this.setState(prevState => ({
         board: placePiece(i, j, 
           prevState.board, 
@@ -105,7 +117,7 @@ class App extends Component {
       }), () => {
         let winner = isGameOver(this.state.board);
         if (winner) {
-          this.gameWon(winner);
+          this.gameComplete(winner);
         } else {
           if (this.state.cpu) {
             this.cpuTurn();
