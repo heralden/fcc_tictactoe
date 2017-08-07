@@ -33,6 +33,7 @@ class App extends Component {
     });
   }
   resetState = () => {
+    clearTimeout(this.resetTimer);
     this.setState({
       playerPiece: 'O', 
       playerScore: 0,
@@ -64,7 +65,7 @@ class App extends Component {
       gameOver: winner,
       [targetScore]: prevState[targetScore] + 1
     }), () => {
-      setTimeout(
+      this.resetTimer = setTimeout(
         () => this.resetBoard(),
         2000
       )
