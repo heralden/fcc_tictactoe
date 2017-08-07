@@ -1,11 +1,9 @@
 .App {
   text-align: center;
-  width: 75vh;
-  height: 75vh;
-  max-width: 75vw;
-  max-height: 75vw;
-  min-width: 45em;
-  min-height: 45em;
+  width: 75vmin;
+  height: 75vmin;
+  min-width: 55em;
+  min-height: 55em;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -14,4 +12,15 @@
   background: radial-gradient(circle, hsl(100, 50%, 55%), hsl(100, 30%, 45%), hsl(100, 30%, 35%));
   border: 2em hsl(40, 50%, 50%) solid;
   border-image: radial-gradient(circle, hsl(40, 50%, 50%) 70%, hsl(40, 45%, 48%) 80%, hsl(40, 40%, 45%) 90%) 10;
+}
+
+.placeholder-text {
+  margin: 0 auto;
+  color: white;
+  font-size: 5em;
+  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

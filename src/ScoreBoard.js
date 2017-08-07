@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './ScoreBoard.css';
 
-const ScoreBoard = props => (
+const ScoreBoard = ({ playerScore, otherScore }) => (
   <div className="ScoreBoard">
-    <span className="Score-header">Scoreboard</span>
-    <span className="Score-X">0</span>
-    <span className="Score-O">0</span>
+    <span className="Score-X">X: {playerScore}</span>
+    <span className="Score-O">O: {otherScore}</span>
   </div>
 );
 

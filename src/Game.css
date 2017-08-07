@@ -10,22 +10,32 @@
 }
 
 .Game-table tr :nth-child(2) {
-  border-left: 0.5em solid white;
-  border-right: 0.5em solid white;
+  border-left: 0.08em solid white;
+  border-right: 0.08em solid white;
 }
 
 .Game-table tbody :nth-child(2) td {
-  border-top: 0.5em solid white;
-  border-bottom: 0.5em solid white;
+  border-top: 0.08em solid white;
+  border-bottom: 0.08em solid white;
 }
 
 .Game-table tr :nth-child(2),
 .Game-table tbody :nth-child(2) td {
-  border-image: linear-gradient(to bottom right, hsl(0, 0%, 90%), hsl(0, 0%, 65%)) 10 10 stretch;
-  border-image: linear-gradient(to bottom right, hsl(0, 0%, 90%), hsl(0, 0%, 65%)) 10 10 stretch;
+  border-image: linear-gradient(to bottom right, hsl(0, 0%, 90%), hsl(0, 0%, 75%)) 10 10 stretch;
 }
 
 .Game-table td {
   height: 33%;
   width: 33%;
+  font-size: 11vmin;
+  color: white;
+  cursor: pointer;
+  user-select: none;
 }
+
+@media (max-width: 740px), (max-height: 740px) {
+  .Game-table td {
+    font-size: 8em;
+  }
+}
+

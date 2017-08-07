@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Menu.css';
 
-const Menu = props => (
+const Menu = ({ onOnePlayer, onTwoPlayer }) => (
   <div className="Menu">
 
-    <button type="button">
+    <button type="button"
+      onClick={onOnePlayer}>
       1 player
     </button>
 
-    <button type="button">
+    <button type="button"
+      onClick={onTwoPlayer}>
       2 player
     </button>
 
