@@ -24,9 +24,13 @@ export const isGameOver = board => {
     return 'X';
   else if (winScenario(board, 'O'))
     return 'O';
+  else if (tieScenario(board))
+    return 'tie';
   else
     return false;
 }
+
+const tieScenario = b => b.every(arr => arr.every(e => e !== null))
 
 const winScenario = (b, e) => {
   if ( isSeq(b[0][0], b[1][0], b[2][0], e)

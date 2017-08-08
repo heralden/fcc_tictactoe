@@ -73,20 +73,27 @@ class App extends Component {
   }
 
   gameWon = winner => {
-    let targetScore;
-    if (winner === this.state.playerPiece) {
-      targetScore = "playerScore";
+    if (winner === 'tie') {
+      this.setState({ pause: false }, () => {
+        this.showMessage("Draw");
+        this.resetBoard();
+      });
     } else {
-      targetScore = "otherScore";
-    }
+      let targetScore;
+      if (winner === this.state.playerPiece) {
+        targetScore = "playerScore";
+      } else {
+        targetScore = "otherScore";
+      }
 
-    this.setState(prevState => ({ 
-      pause: false,
-      [targetScore]: prevState[targetScore] + 1
-    }), () => {
-      this.showMessage(winner.concat(" won!"));
-      this.resetBoard();
-    });
+      this.setState(prevState => ({ 
+        pause: false,
+        [targetScore]: prevState[targetScore] + 1
+      }), () => {
+        this.showMessage(winner.concat(" won!"));
+        this.resetBoard();
+      });
+    }
   }
 
   cpuTurn = () => {
