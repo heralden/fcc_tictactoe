@@ -24,13 +24,14 @@ class App extends Component {
   }
 
   resetBoard = () => {
-    this.setState({
+    this.setState(prevState => ({
+      playerPiece: prevState.cpu ? prevState.playerPiece : 'O', 
       board: [
         [ null, null, null ],
         [ null, null, null ],
         [ null, null, null ]
       ]
-    });
+    }));
   }
   resetState = () => {
     clearTimeout(this.waitTimer);
@@ -159,11 +160,13 @@ class App extends Component {
           handleClickCell={this.handleClickCell}
           board={this.state.board}
         />
-        <ScoreBoard 
-          playerScore={this.state.playerScore}
-          otherScore={this.state.otherScore}
-          cpu={this.state.cpu}
-        />
+        {this.state.cpu && (
+          <ScoreBoard 
+            playerScore={this.state.playerScore}
+            otherScore={this.state.otherScore}
+            cpu={this.state.cpu}
+          />
+        )}
       </div>
     );
   }
