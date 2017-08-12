@@ -74,37 +74,41 @@ class App extends Component {
   }
 
   gameWon = winner => {
-    if (winner === 'tie') {
-      this.setState({ pause: false }, () => {
-        this.showMessage("Draw");
-        this.resetBoard();
-      });
-    } else {
-      this.setState({ 
-        pause: false
-      }, () => {
-        this.showMessage(winner.concat(" won!"));
-        this.resetBoard();
-      });
-    }
+    var text, targetScore;
+
+    if (winner === 'tie')
+      text = "Draw";
+    else
+      text = winner.concat(" won!");
+
+    this.setState({ 
+      pause: false
+    }, () => {
+      this.showMessage(text);
+      this.resetBoard();
+    });
 
     if (this.state.cpu) { 
 
-      if (winner !== 'tie') {
-        let targetScore;
-        if (winner === this.state.playerPiece) {
-          targetScore = "playerScore";
-        } else {
-          targetScore = "otherScore";
-        }
-        this.setState(prevState => ({
-          [targetScore]: prevState[targetScore] + 1
-        }));
-      }
+      if (winner === this.state.playerPiece)
+        targetScore = "playerScore";
+      else if (winner === otherPiece(this.state.playerPiece))
+        targetScore = "otherScore";
 
-      this.setState(prevState => ({
-        playerPiece: otherPiece(prevState.playerPiece)
-      }), () => {
+      this.setState(prevState => {
+        let baseState = { 
+          playerPiece: otherPiece(prevState.playerPiece)
+        };
+
+        if (targetScore) {
+          return { 
+            ...baseState, 
+            [targetScore]: prevState[targetScore] + 1
+          };
+        } else {
+          return baseState;
+        }
+      }, () => {
         if (this.state.playerPiece === 'X' && this.state.cpu)
           this.cpuTurn();
       });
@@ -113,26 +117,18 @@ class App extends Component {
 
   cpuTurn = () => {
     let cpuPiece = otherPiece(this.state.playerPiece);
-    /*
-    let prevBoard = this.state.board;
-    let move = moveCpu(prevBoard, cpuPiece);
-    this.setState({
-      board: placePiece(move.i, move.j
-    */
-    moveCpu(this.state.board, cpuPiece, (j, i) => this.setState(
-      prevState => ({
-        board: placePiece(i, j,
-          prevState.board,
-          cpuPiece
-        )
-      }),
-      () => {
-        let winner = isGameOver(this.state.board);
-        if (winner) {
-          this.gameComplete(winner);
-        }
-      }
-    ));
+
+    this.setState(prevState => {
+      let move = moveCpu(prevState.board, cpuPiece);
+
+      return {
+        board: placePiece(move.i, move.j, prevState.board, cpuPiece)
+      };
+    }, () => {
+      let winner = isGameOver(this.state.board);
+      if (winner)
+        this.gameComplete(winner);
+    });
   }
 
   handleClickCell = (i, j) => () => {

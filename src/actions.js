@@ -8,10 +8,8 @@ export const placePiece = (i, j, board, piece) => [
   ...board.slice(i+1)
 ]
 
-export const moveCpu = (board, piece, cb) => {
-  let res = minimax(board, null, piece, piece);
-  cb(res.move.j, res.move.i);
-}
+export const moveCpu = (board, piece) =>
+  minimax(board, null, piece, piece).move;
 
 export const isGameOver = board => {
   if (winScenario(board, 'X'))
