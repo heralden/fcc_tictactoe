@@ -3,7 +3,7 @@ import './App.css';
 import Menu from './Menu';
 import ScoreBoard from './ScoreBoard';
 import Game from './Game';
-import { placePiece, moveCpu, isGameOver } from './actions';
+import { placePiece, moveCpu, isGameOver, otherPiece } from './actions';
 
 class App extends Component {
   constructor(props) {
@@ -74,20 +74,6 @@ class App extends Component {
   }
 
   gameWon = winner => {
-    if (this.state.cpu && winner !== 'tie') {
-      let targetScore;
-      if (winner === this.state.playerPiece) {
-        targetScore = "playerScore";
-      } else {
-        targetScore = "otherScore";
-      }
-
-      this.setState(prevState => ({
-        playerPiece: prevState.playerPiece === 'O' ? 'X' : 'O',
-        [targetScore]: prevState[targetScore] + 1
-      }));
-    }
-
     if (winner === 'tie') {
       this.setState({ pause: false }, () => {
         this.showMessage("Draw");
@@ -99,6 +85,26 @@ class App extends Component {
       }, () => {
         this.showMessage(winner.concat(" won!"));
         this.resetBoard();
+      });
+    }
+
+    if (this.state.cpu) { 
+
+      if (winner !== 'tie') {
+        let targetScore;
+        if (winner === this.state.playerPiece) {
+          targetScore = "playerScore";
+        } else {
+          targetScore = "otherScore";
+        }
+        this.setState(prevState => ({
+          [targetScore]: prevState[targetScore] + 1
+        }));
+      }
+
+      this.setState(prevState => ({
+        playerPiece: otherPiece(prevState.playerPiece)
+      }), () => {
         if (this.state.playerPiece === 'X' && this.state.cpu)
           this.cpuTurn();
       });
@@ -106,8 +112,14 @@ class App extends Component {
   }
 
   cpuTurn = () => {
-    let cpuPiece = this.state.playerPiece === 'O' ? 'X' : 'O';
-    moveCpu(this.state.board, cpuPiece, (i, j) => this.setState(
+    let cpuPiece = otherPiece(this.state.playerPiece);
+    /*
+    let prevBoard = this.state.board;
+    let move = moveCpu(prevBoard, cpuPiece);
+    this.setState({
+      board: placePiece(move.i, move.j
+    */
+    moveCpu(this.state.board, cpuPiece, (j, i) => this.setState(
       prevState => ({
         board: placePiece(i, j,
           prevState.board,
@@ -139,7 +151,7 @@ class App extends Component {
             this.cpuTurn();
           } else {
             this.setState(prevState => ({ 
-              playerPiece: prevState.playerPiece === 'O' ? 'X' : 'O' 
+              playerPiece: otherPiece(prevState.playerPiece)
             }));
           }
         }
